@@ -1,0 +1,98 @@
+// Define a Node class to represent the nodes in the syntax tree
+class Node {
+    String value;
+    Node left;
+    Node right;
+    
+    // Constructor to initialize the node with a value
+    public Node(String value) {
+        this.value = value;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+// Define a class to perform arithmetic operations
+class ArithmeticOperations {
+    // Method to perform arithmetic operation based on the operator
+    public static int operate(int operand1, int operand2, String operator) {
+        switch(operator) {
+            case "+":
+                return operand1 + operand2;
+            case "-":
+                return operand1 - operand2;
+            case "*":
+                return operand1 * operand2;
+            case "/":
+                if (operand2 == 0) {
+                    throw new ArithmeticException("Division by zero");
+                }
+                return operand1 / operand2;
+            default:
+                throw new IllegalArgumentException("Invalid operator: " + operator);
+        }
+    }
+}
+
+// Define a class to traverse the syntax tree and perform arithmetic operations
+class SyntaxTreeTraversal {
+    // Method to perform inorder traversal of the syntax tree and perform arithmetic operations
+    public static int evaluateSyntaxTree(Node root) {
+        if (root == null) {
+            throw new IllegalArgumentException("Syntax tree is empty");
+        }
+        
+        if (root.left == null && root.right == null) {
+            return Integer.parseInt(root.value);
+        }
+        
+        int leftValue = evaluateSyntaxTree(root.left);
+        int rightValue = evaluateSyntaxTree(root.right);
+        
+        return ArithmeticOperations.operate(leftValue, rightValue, root.value);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Construct the syntax tree
+        Node root = new Node("*");
+        root.left = new Node("+");
+        root.left.left = new Node("5");
+        root.left.right = new Node("3");
+        root.right = new Node("-");
+        root.right.left = new Node("10");
+        root.right.right = new Node("2");
+        
+        // Traverse the syntax tree and perform arithmetic operations
+        int result = SyntaxTreeTraversal.evaluateSyntaxTree(root);
+        System.out.println("Result: " + result);
+    }
+}
+*inputexplanation:*
+
+In this example, the input is represented as a syntax tree. Let's break down the syntax tree representation:
+
+```
+      *
+     / \
+    +   -
+   / \ / \
+  5  3 10  2
+```
+
+Each node in the syntax tree represents either an operator or an operand:
+- Operators are represented by the symbols '+', '-', '*', and '/'.
+- Operands are represented by integer values.
+
+Here's how the input syntax tree is constructed:
+- The root node represents the multiplication operator ('*').
+- The left subtree represents addition ('+'), with '5' as the left operand and '3' as the right operand.
+- The right subtree represents subtraction ('-'), with '10' as the left operand and '2' as the right operand.
+
+So, the syntax tree represents the arithmetic expression:
+```
+(5 + 3) * (10 - 2)
+```
+
+When the program traverses this syntax tree and performs arithmetic operations, it evaluates this expression and computes the result, which should be 64 in this case.

@@ -1,0 +1,53 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class IntermediateCodeGenerator {
+    private List<String> intermediateCode;
+
+    public IntermediateCodeGenerator() {
+        intermediateCode = new ArrayList<>();
+    }
+
+    public void generateIfStatement(String condition, List<String> ifBlock) {
+        intermediateCode.add("if " + condition + " goto L1");
+        for (String statement : ifBlock) {
+            intermediateCode.add(statement);
+        }
+        intermediateCode.add("L1: ");
+    }
+
+    public void generateWhileStatement(String condition, List<String> whileBlock) {
+        intermediateCode.add("L2: if " + condition + " goto L3");
+        for (String statement : whileBlock) {
+            intermediateCode.add(statement);
+        }
+        intermediateCode.add("goto L2");
+        intermediateCode.add("L3: ");
+    }
+
+    public void printIntermediateCode() {
+        for (String code : intermediateCode) {
+            System.out.println(code);
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        IntermediateCodeGenerator generator = new IntermediateCodeGenerator();
+
+        // Example if statement
+        List<String> ifBlock = new ArrayList<>();
+        ifBlock.add("x = 1");
+        ifBlock.add("y = x + 1");
+        generator.generateIfStatement("x == 1", ifBlock);
+
+        // Example while statement
+        List<String> whileBlock = new ArrayList<>();
+        whileBlock.add("x = x + 1");
+        whileBlock.add("y = y + 1");
+        generator.generateWhileStatement("x < 5", whileBlock);
+
+        generator.printIntermediateCode();
+    }
+}
